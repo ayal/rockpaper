@@ -6,6 +6,7 @@
 
 <body>
   {{> lobby}}
+  {{> scores}}
 </body>
 
 <template name="lobby">
@@ -47,3 +48,13 @@
   </div>
 </template>
 
+<template name="scores">
+  <div class="scores panel">
+    <div class="alert-box">HIGH SCORES</div>
+  {{#each high}}
+  <div class="panel">
+    <span>{{this}}</span>:<span>{{score this}}</span>
+  </div>
+  {{/each}}
+  </div>
+</template>

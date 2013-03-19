@@ -75,6 +75,17 @@ if (Meteor.isClient) {
     else
       return this[winner + "Name"];
   };
+
+  Template.scores.high = function() {
+    var arr = Games.find({}).fetch();
+    high = !arr.length ? {} : arr.map(function(x){return x.playerOneMove && x.playerTwoMove && Template.game.winner.apply(x, []) }).reduce(function(a,b){console.log(a,b); var memo = a; if (typeof memo !== 'object'){ memo = {}; memo[a] ? memo[a]++ : memo[a] = 1; } memo[b] ? memo[b]++ : memo[b] = 1;  return memo;});
+    return _.keys(high);
+
+  };
+
+  Template.scores.score = function(who){
+    return high[who];
+  };
 }
 
 if (Meteor.isServer) {
