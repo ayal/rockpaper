@@ -1,27 +1,27 @@
-var games = new Meteor.Collection("Games");
-
+var Games = new Meteor.Collection("games");
 
 if (Meteor.isClient) {
   Template.lobby.games = function(){
-    return games.find();
+    return Games.find();
   };
 
   Template.lobby.events({
     'click .newgame': function(){
-      console.log('new game');
       if (Meteor.user()) {
-        var game_id = games.insert({player_one: {name: Meteor.user().profile.name}});        
-      }
-      else {
+        var gameId = Games.insert({playerOne: {name: Meteor.user().profile.name}});
+      } else {
         alert('please log in first');
       }
     },
     'click .sithere': function(){
       if (Meteor.user()) {
-        var thegame = games.findOne({_id: this._id});
-        games.update(this._id, {$set: {player_two: {name: Meteor.user().profile.name}}});
-      }
-      else {
+        var theGame = Games.findOne({_id: this._id});
+        if (theGame.playerOne.name === Meteor.user().profile.name) { // xcxc
+          alert("You can't play against yourself");
+        } else {
+          Games.update(this._id, {$set: {playerTwo: {name: Meteor.user().profile.name}}});
+        }
+      } else {
         alert('please log in first');
       }
     }

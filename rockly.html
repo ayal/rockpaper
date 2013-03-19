@@ -7,16 +7,22 @@
 </body>
 
 <template name="lobby">
-  {{loginButtons}}
+  <div class="login">
+    {{loginButtons}}
+  </div>
   <button class="btn btn-info newgame">new game</button>
   {{#each games}}
+    {{> game}}
+  {{/each}}
+</template>
+
+<template name="game">
   <div class="game">
-    {{player_one.name}} VS
-    {{#if player_two}}
-    <span class="player">{{player_two.name}}</span>
+    {{playerOne.name}} VS
+    {{#if playerTwo}}
+    <span class="player">{{playerTwo.name}}</span>
     {{else}}
     <button class="btn btn-info sithere">SIT HERE</button>
     {{/if}}
   </div>
-  {{/each}}
 </template>

@@ -3,11 +3,20 @@
 </head>
 
 <body>
-  {{> hello}}
+  {{> lobby}}
 </body>
 
-<template name="hello">
-  <h1>Hello World!</h1>
-  {{greeting}}
-  <input type="button" value="Click" />
+<template name="lobby">
+  {{loginButtons}}
+  <button class="btn btn-info newgame">new game</button>
+  {{#each games}}
+  <div class="game">
+    {{player_one.name}} VS
+    {{#if player_two}}
+    <span class="player">{{player_two.name}}</span>
+    {{else}}
+    <button class="btn btn-info sithere">SIT HERE</button>
+    {{/if}}
+  </div>
+  {{/each}}
 </template>
