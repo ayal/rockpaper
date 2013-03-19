@@ -1,36 +1,88 @@
-var games = new Meteor.Collection("Games");
+var Games = new Meteor.Collection("games");
 
+Meteor.methods({
+  play: function(gameId, move) {
+    var game = Games.findOne(gameId);
+
+    if (game.playerOne.name === Meteor.user().profile.name) {
+      Games.update(gameId, {$set: {"playerOne.move": move}});
+    } else if (game.playerTwo.name === Meteor.user().profile.name) {
+      Games.update(gameId, {$set: {"playerTwo.move": move}});
+    }
+  }
+});
 
 if (Meteor.isClient) {
-  Template.lobby.games = function(){
-    return games.find();
+  Template.lobby.games = function() {
+    return Games.find();
   };
 
   Template.lobby.events({
     'click .newgame': function(){
-      console.log('new game');
       if (Meteor.user()) {
-        var game_id = games.insert({player_one: {name: Meteor.user().profile.name}});
-      }
-      else {
+        var gameId = Games.insert({playerOne: {name: Meteor.user().profile.name}});
+      } else {
         alert('please log in first');
       }
     },
     'click .sithere': function(){
       if (Meteor.user()) {
-        var thegame = games.findOne({_id: this._id});
-        games.update(this._id, {$set: {player_two: {name: Meteor.user().profile.name}}});
-      }
-      else {
+        Games.update(this._id, {$set: {playerTwo: {name: Meteor.user().profile.name}}});
+      } else {
         alert('please log in first');
       }
     }
   });
+
+  Template.game.canPlay = function () {
+    if (!Meteor.user() || !Meteor.user().profile)
+      return false;
+
+    if (this.playerOne.name === Meteor.user().profile.name) {
+      return !this.playerOne.move;
+    } else if (this.playerTwo.name === Meteor.user().profile.name) {
+      return !this.playerTwo.move;
+    } else {
+      return false;
+    }
+  };
+
+  Template.game.possibleMoves = [{name: 'rock'}, {name: 'paper'}, {name: 'scissors'}];
+  Template.game.events({
+    'click .move': function (event, template) {
+      Meteor.call("play", template.data._id, this.name);
+    }
+  });
+
+  Template.game.canJoin = function () {
+    return Meteor.user() && Meteor.user().profile && this.playerOne.name !== Meteor.user().profile.name;
+  };
+
+  Template.game.gameOver = function () {
+    return this.playerOne.move && this.playerTwo.move;
+  };
+
+  Template.game.winner = function () {
+    var winners = {
+      rock: {paper: "playerTwo", scissors: "playerOne"},
+      paper: {rock: "playerOne", scissors: "playerTwo"},
+      scissors: {rock: "playerTwo", paper: "playerOne"}
+    };
+
+    var winner = winners[this.playerOne.move][this.playerTwo.move];
+    if (!winner)
+      return "TIE";
+    else
+      return this[winner].name;
+  };
 }
 
 if (Meteor.isServer) {
-  Meteor.startup(function () {
-    // code to run on server at startup
+  Meteor.publish(null, function () {
+    return Games.find({}, {fields: {"playerOne.name": 1, "playerTwo.name": 1}});
+  });
+  Meteor.publish(null, function () {
+    return Games.find({"playerOne.move": {$exists: true}, "playerTwo.move": {$exists: true}});
   });
 }
 

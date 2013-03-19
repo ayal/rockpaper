@@ -4,10 +4,10 @@ Meteor.methods({
   play: function(gameId, move) {
     var game = Games.findOne(gameId);
 
-    if (game.playerOne.name === Meteor.user().profile.name) {
-      Games.update(gameId, {$set: {"playerOne.move": move}});
-    } else if (game.playerTwo.name === Meteor.user().profile.name) {
-      Games.update(gameId, {$set: {"playerTwo.move": move}});
+    if (game.playerOneName === Meteor.user().profile.name) {
+      Games.update(gameId, {$set: {"playerOneMove": move}});
+    } else if (game.playerTwoName === Meteor.user().profile.name) {
+      Games.update(gameId, {$set: {"playerTwoMove": move}});
     }
   }
 });
@@ -20,14 +20,14 @@ if (Meteor.isClient) {
   Template.lobby.events({
     'click .newgame': function(){
       if (Meteor.user()) {
-        var gameId = Games.insert({playerOne: {name: Meteor.user().profile.name}});
+        var gameId = Games.insert({playerOneName: Meteor.user().profile.name});
       } else {
         alert('please log in first');
       }
     },
     'click .sithere': function(){
       if (Meteor.user()) {
-        Games.update(this._id, {$set: {playerTwo: {name: Meteor.user().profile.name}}});
+        Games.update(this._id, {$set: {playerTwoName: Meteor.user().profile.name}});
       } else {
         alert('please log in first');
       }
@@ -38,10 +38,10 @@ if (Meteor.isClient) {
     if (!Meteor.user() || !Meteor.user().profile)
       return false;
 
-    if (this.playerOne.name === Meteor.user().profile.name) {
-      return !this.playerOne.move;
-    } else if (this.playerTwo.name === Meteor.user().profile.name) {
-      return !this.playerTwo.move;
+    if (this.playerOneName === Meteor.user().profile.name) {
+      return !this.playerOneMove;
+    } else if (this.playerTwoName === Meteor.user().profile.name) {
+      return !this.playerTwoMove;
     } else {
       return false;
     }
@@ -55,11 +55,11 @@ if (Meteor.isClient) {
   });
 
   Template.game.canJoin = function () {
-    return Meteor.user() && Meteor.user().profile && this.playerOne.name !== Meteor.user().profile.name;
+    return Meteor.user() && Meteor.user().profile && this.playerOneName !== Meteor.user().profile.name;
   };
 
   Template.game.gameOver = function () {
-    return this.playerOne.move && this.playerTwo.move;
+    return this.playerOneMove && this.playerTwoMove;
   };
 
   Template.game.winner = function () {
@@ -69,20 +69,20 @@ if (Meteor.isClient) {
       scissors: {rock: "playerTwo", paper: "playerOne"}
     };
 
-    var winner = winners[this.playerOne.move][this.playerTwo.move];
+    var winner = winners[this.playerOneMove][this.playerTwoMove];
     if (!winner)
       return "TIE";
     else
-      return this[winner].name;
+      return this[winner + "Name"];
   };
 }
 
 if (Meteor.isServer) {
   Meteor.publish(null, function () {
-    return Games.find({}, {fields: {"playerOne.name": 1, "playerTwo.name": 1}});
+    return Games.find({}, {fields: {"playerOneName": 1, "playerTwoName": 1}});
   });
   Meteor.publish(null, function () {
-    return Games.find({"playerOne.move": {$exists: true}, "playerTwo.move": {$exists: true}});
+    return Games.find({"playerOneMove": {$exists: true}, "playerTwoMove": {$exists: true}});
   });
 }
 

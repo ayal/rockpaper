@@ -1,5 +1,6 @@
 <head>
   <title>rockly</title>
+  <link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/foundation/4.0.5/css/foundation.min.css">
 </head>
 
 <body>
@@ -7,16 +8,39 @@
 </body>
 
 <template name="lobby">
-  {{loginButtons}}
-  <button class="btn btn-info newgame">new game</button>
-  {{#each games}}
-  <div class="game">
-    {{player_one.name}} VS
-    {{#if player_two}}
-    <span class="player">{{player_two.name}}</span>
-    {{else}}
-    <button class="btn btn-info sithere">SIT HERE</button>
-    {{/if}}
+  <div class="login">
+    {{loginButtons}}
   </div>
+  <button class="button newgame">new game</button>
+  {{#each games}}
+    {{> game}}
   {{/each}}
 </template>
+
+<template name="game">
+  <div class="game">
+    {{playerOne.name}}
+
+    VS
+
+    {{#if playerTwo}}
+      <span class="player">{{playerTwo.name}}</span>
+
+      {{#if canPlay}}
+        {{#each possibleMoves}}
+          <button class="button move {{name}}">{{name}}</button>
+        {{/each}}
+      {{/if}}
+
+      {{#if gameOver}}
+        WINNER: {{winner}}
+      {{/if}}
+    {{else}}
+      {{#if canJoin}}
+        <button class="button sithere">SIT HERE</button>
+      {{/if}}
+    {{/if}}
+
+  </div>
+</template>
+

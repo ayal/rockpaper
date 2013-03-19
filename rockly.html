@@ -19,12 +19,12 @@
 
 <template name="game">
   <div class="game">
-    {{playerOne.name}}
+    {{playerOneName}}
 
     VS
 
-    {{#if playerTwo}}
-      <span class="player">{{playerTwo.name}}</span>
+    {{#if playerTwoName}}
+      <span class="player">{{playerTwoName}}</span>
 
       {{#if canPlay}}
         {{#each possibleMoves}}
