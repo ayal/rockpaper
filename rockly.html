@@ -11,14 +11,14 @@
   <div class="login">
     {{loginButtons}}
   </div>
-  <button class="newgame">new game</button>
+  <button class="button newgame">new game</button>
   {{#each games}}
     {{> game}}
   {{/each}}
 </template>
 
 <template name="game">
-  <div class="button game">
+  <div class="game">
     {{playerOne.name}}
 
     VS
