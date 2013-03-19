@@ -47,10 +47,10 @@ if (Meteor.isClient) {
     }
   };
 
-  Template.game.possibleMoves = [{name: 'rock'}, {name: 'paper'}, {name: 'scissors'}];
+  Template.game.possibleMoves = [{move: 'rock'}, {move: 'paper'}, {move: 'scissors'}];
   Template.game.events({
     'click .move': function (event, template) {
-      Meteor.call("play", template.data._id, this.name);
+      Meteor.call("play", template.data._id, this.move);
     }
   });
 
