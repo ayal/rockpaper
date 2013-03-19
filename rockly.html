@@ -18,7 +18,7 @@
 </template>
 
 <template name="game">
-  <div class="game">
+  <div class="button game">
     {{playerOne.name}}
 
     VS
@@ -28,7 +28,7 @@
 
       {{#if canPlay}}
         {{#each possibleMoves}}
-          <button class="move {{name}}">{{name}}</button>
+          <button class="button move {{name}}">{{name}}</button>
         {{/each}}
       {{/if}}
 
@@ -37,7 +37,7 @@
       {{/if}}
     {{else}}
       {{#if canJoin}}
-        <button class="sithere">SIT HERE</button>
+        <button class="button sithere">SIT HERE</button>
       {{/if}}
     {{/if}}
 
