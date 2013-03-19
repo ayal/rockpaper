@@ -35,6 +35,9 @@ if (Meteor.isClient) {
   });
 
   Template.game.canPlay = function () {
+    if (!Meteor.user() || !Meteor.user().profile)
+      return false;
+
     if (this.playerOne.name === Meteor.user().profile.name) {
       return !this.playerOne.move;
     } else if (this.playerTwo.name === Meteor.user().profile.name) {
@@ -52,7 +55,7 @@ if (Meteor.isClient) {
   });
 
   Template.game.canJoin = function () {
-    return this.playerOne.name !== Meteor.user().profile.name;
+    return Meteor.user() && Meteor.user().profile && this.playerOne.name !== Meteor.user().profile.name;
   };
 
   Template.game.gameOver = function () {
