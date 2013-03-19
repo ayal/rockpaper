@@ -1,5 +1,6 @@
 <head>
   <title>rockly</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/foundation/4.0.5/css/foundation.min.css">
 </head>
 
@@ -18,26 +19,28 @@
 </template>
 
 <template name="game">
-  <div class="game">
+  <div class="game panel">
     {{playerOneName}}
 
     VS
 
     {{#if playerTwoName}}
-      <span class="player">{{playerTwoName}}</span>
+      {{playerTwoName}}
 
-      {{#if canPlay}}
-        {{#each possibleMoves}}
-          <button class="button move {{move}}">{{move}}</button>
-        {{/each}}
-      {{/if}}
+      <div>
+        {{#if canPlay}}
+          {{#each possibleMoves}}
+            <button class="button small move {{move}}">{{move}}</button>
+          {{/each}}
+        {{/if}}
 
-      {{#if gameOver}}
-        WINNER: {{winner}}
-      {{/if}}
+        {{#if gameOver}}
+          WINNER: {{winner}}
+        {{/if}}
+      </div>
     {{else}}
       {{#if canJoin}}
-        <button class="button sithere">SIT HERE</button>
+        <button class="button small sithere">SIT HERE</button>
       {{/if}}
     {{/if}}
 

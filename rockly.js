@@ -5,9 +5,9 @@ Meteor.methods({
     var game = Games.findOne(gameId);
 
     if (game.playerOneName === Meteor.user().profile.name) {
-      Games.update(gameId, {$set: {"playerOneMove": move}});
+      Games.update(gameId, {$set: {"playerOneMove": move, playerOnePlayed: true}});
     } else if (game.playerTwoName === Meteor.user().profile.name) {
-      Games.update(gameId, {$set: {"playerTwoMove": move}});
+      Games.update(gameId, {$set: {"playerTwoMove": move, playerTwoPlayed: true}});
     }
   }
 });
@@ -39,9 +39,9 @@ if (Meteor.isClient) {
       return false;
 
     if (this.playerOneName === Meteor.user().profile.name) {
-      return !this.playerOneMove;
+      return !this.playerOnePlayed;
     } else if (this.playerTwoName === Meteor.user().profile.name) {
-      return !this.playerTwoMove;
+      return !this.playerTwoPlayed;
     } else {
       return false;
     }
@@ -79,7 +79,12 @@ if (Meteor.isClient) {
 
 if (Meteor.isServer) {
   Meteor.publish(null, function () {
-    return Games.find({}, {fields: {"playerOneName": 1, "playerTwoName": 1}});
+    return Games.find({}, {fields: {
+      "playerOneName": 1,
+      "playerTwoName": 1,
+      "playerOnePlayed": 1,
+      "playerTwoPlayed": 1
+    }});
   });
   Meteor.publish(null, function () {
     return Games.find({"playerOneMove": {$exists: true}, "playerTwoMove": {$exists: true}});
