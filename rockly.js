@@ -46,7 +46,7 @@ if (Meteor.isClient) {
 
   Template.game.possibleMoves = [{name: 'rock'}, {name: 'paper'}, {name: 'scissors'}];
   Template.game.events({
-    'click': function (event, template) {
+    'click .move': function (event, template) {
       Meteor.call("play", template.data._id, this.name);
     }
   });
@@ -75,8 +75,11 @@ if (Meteor.isClient) {
 }
 
 if (Meteor.isServer) {
-  Meteor.startup(function () {
-    // code to run on server at startup
+  Meteor.publish(null, function () {
+    return Games.find({}, {fields: {"playerOne.name": 1, "playerTwo.name": 1}});
+  });
+  Meteor.publish(null, function () {
+    return Games.find({"playerOne.move": {$exists: true}, "playerTwo.move": {$exists: true}});
   });
 }
 

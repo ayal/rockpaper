@@ -11,7 +11,7 @@
   <div class="login">
     {{loginButtons}}
   </div>
-  <button class="btn btn-info newgame">new game</button>
+  <button class="newgame">new game</button>
   {{#each games}}
     {{> game}}
   {{/each}}
@@ -28,7 +28,7 @@
 
       {{#if canPlay}}
         {{#each possibleMoves}}
-          <button class="btn btn-info {{name}}">{{name}}</button>
+          <button class="move {{name}}">{{name}}</button>
         {{/each}}
       {{/if}}
 
@@ -37,12 +37,10 @@
       {{/if}}
     {{else}}
       {{#if canJoin}}
-        <button class="btn btn-info sithere">SIT HERE</button>
+        <button class="sithere">SIT HERE</button>
       {{/if}}
     {{/if}}
 
   </div>
 </template>
 
-<template name="chooseMove">
-</template>
